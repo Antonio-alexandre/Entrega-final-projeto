@@ -1,24 +1,14 @@
 package Model;
 
 public class Funcionario {
-    private int idf;
-    private long cpf;
+    private String cpf;
     private String nome;
     private String email;
 
-    public Funcionario(int idf, long cpf, String nome, String email) {
+    public Funcionario(String cpf, String nome, String email) {
         this.cpf = cpf;
         this.nome = nome;
         this.email = email;
-        this.idf = idf;
-    }
-
-    public void setIdf(int idf) {
-        this.idf = idf;
-    }
-
-    public int getIdf() {
-        return idf;
     }
 
     public void setNome(String nome) {
@@ -29,11 +19,11 @@ public class Funcionario {
         return nome;
     }
 
-    public void setCpf(long cpf) {
+    public void setCpf(String cpf) {
         this.cpf = cpf;
     }
 
-    public long getCpf() {
+    public String getCpf() {
         return cpf;
     }
 
@@ -44,4 +34,6 @@ public class Funcionario {
     public String getEmail() {
         return email;
     }
+
+
 }

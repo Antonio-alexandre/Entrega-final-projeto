@@ -13,13 +13,12 @@ public class FuncionarioDAO extends ConnectionDAO{
 
         connectToDB();
 
-        String sql = "INSERT INTO Funcionario (idf, cpf, nome, email) values(?,?,?,?)";
+        String sql = "INSERT INTO Funcionario (cpf, nome, email) values(?,?,?)";
         try {
             pst = con.prepareStatement(sql);
-            pst.setInt(1, funcionario.getIdf());
-            pst.setLong(2, funcionario.getCpf());
-            pst.setString(3, funcionario.getNome());
-            pst.setString(4, funcionario.getEmail());
+            pst.setString(1, funcionario.getCpf());
+            pst.setString(2, funcionario.getNome());
+            pst.setString(3, funcionario.getEmail());
             pst.execute();
             sucesso = true;
         } catch (SQLException exc) {
@@ -36,12 +35,12 @@ public class FuncionarioDAO extends ConnectionDAO{
         return sucesso;
     }
 
-    public boolean deleteFuncionario(int idf) {
+    public boolean deleteFuncionario(String cpf) {
         connectToDB();
-        String sql = "DELETE FROM Funcionario where idf=?";
+        String sql = "DELETE FROM Funcionario where cpf=?";
         try {
             pst = con.prepareStatement(sql);
-            pst.setInt(1, idf);
+            pst.setString(1, cpf);
             pst.execute();
             sucesso = true;
         } catch (SQLException ex) {
@@ -71,11 +70,10 @@ public class FuncionarioDAO extends ConnectionDAO{
 
             while (rs.next()) {
 
-                Funcionario funcionarioAux = new Funcionario(rs.getInt("idf"), rs.getLong("cpf"), rs.getString("nome"), rs.getString("email"));
+                Funcionario funcionarioAux = new Funcionario(rs.getString("cpf"), rs.getString("nome"), rs.getString("email"));
 
-                System.out.println("idfuncionario = " + funcionarioAux.getIdf());
                 System.out.println("cpf = " + funcionarioAux.getCpf());
-                System.out.println("cpf = " + funcionarioAux.getNome());
+                System.out.println("nome = " + funcionarioAux.getNome());
                 System.out.println("email = " + funcionarioAux.getEmail());
                 System.out.println("--------------------------------");
 
@@ -95,4 +93,31 @@ public class FuncionarioDAO extends ConnectionDAO{
         }
         return funcionarios;
     }
+
+    public boolean editFuncionario(String cpf, int opcao, String novoValor) {
+        connectToDB();
+
+        String campo = opcao == 1 ? "nome" : "email";
+        String sql = "UPDATE Funcionario SET " + campo + " = ? WHERE cpf = ?";
+
+        try {
+            pst = con.prepareStatement(sql);
+            pst.setString(1, novoValor);
+            pst.setString(2, cpf);
+            pst.executeUpdate();
+            sucesso = true;
+        } catch (SQLException exc) {
+            System.out.println("Erro: " + exc.getMessage());
+            sucesso = false;
+        } finally {
+            try {
+                con.close();
+                pst.close();
+            } catch (SQLException exc) {
+                System.out.println("Erro: " + exc.getMessage());
+            }
+        }
+        return sucesso;
+    }
 }
+

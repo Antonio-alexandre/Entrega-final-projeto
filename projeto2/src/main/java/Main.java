@@ -1,22 +1,18 @@
-import DAO.ClienteDAO;
-import DAO.FuncionarioDAO;
-import DAO.HistoricoDAO;
-import DAO.VeiculosDAO;
-import Model.Cliente;
-import Model.Funcionario;
-import Model.Historico;
-import Model.Veiculos;
+import DAO.*;
+import Model.*;
 
 import java.util.Scanner;
 
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         Scanner entrada = new Scanner(System.in);
         ClienteDAO clienteDAO = new ClienteDAO();
         FuncionarioDAO funcionarioDAO = new FuncionarioDAO();
         HistoricoDAO historicoDAO = new HistoricoDAO();
         VeiculosDAO veiculosDAO = new VeiculosDAO();
+        VagasDAO vagasDAO = new VagasDAO();
+        VagaFuncionarioDAO vagaFuncionarioDAO = new VagaFuncionarioDAO();
 
         //Informações do Cliente
         int idc;
@@ -26,7 +22,7 @@ public class Main {
 
         //Informações do Funcionario
         int idf;
-        long cpff;
+        String cpff;
         String nomef;
         String emailf;
 
@@ -41,71 +37,144 @@ public class Main {
         String horariosaida;
         String horarioentrada;
 
+        //Informações das vagas
+        int idv;
+        int num;
+        boolean disponivel;
+
         boolean flag = true;
+        boolean flag_switch = true;
 
         int op;
+        int op_switch;
 
         while(flag)
         {
             System.out.println("================================================");
+            Thread.sleep(1000);
+            System.out.println("Bem-vindo ao Gestor de Estacionamento");
+            Thread.sleep(1000);
+            System.out.println("================================================\n");
+            Thread.sleep(1000);
+
             System.out.println("Escolha a ação a ser realizada: ");
-            System.out.println("1 - Adicionar um Cliente no banco de dados");
-            System.out.println("2 - Deletar um cliente do banco de dados");
-            System.out.println("3 - Mostrar todos os clientes registrados: ");
-            System.out.println("4 - Adicionar um funcionário no banco de dados");
-            System.out.println("5 - Deletar um funcionário do banco de dados");
-            System.out.println("6 - Mostrar todos os funcionários registrados");
-            System.out.println("7 - Adicionar um veículo no banco de dados");
-            System.out.println("8 - Deletar um veiculo do banco de dados");
-            System.out.println("9 - Mostrar todos os veículos registrados");
-            System.out.println("10 - Registrar o historico no banco de dados");
-            System.out.println("11 - Deletar o registro do historico do banco de dados");
-            System.out.println("12 - Mostrar todos os registros de histórico registrados");
-            System.out.println("0 - Fechar o menu");
+            System.out.println("1 - Área Cliente");
+            System.out.println("2 - Área Funcionário");
+            System.out.println("3 - Área Gerenciamento de Vagas");
+            System.out.println("4 - Área Veículos");
+            System.out.println("5 - Histórico");
             System.out.println("================================================");
             System.out.println();
             op = entrada.nextInt();
             switch(op){
                 case 1:
-                    System.out.println("Digite o id do cliente: ");
-                    idc = entrada.nextInt();
-                    System.out.println("Digite o cpf do cliente: ");
-                    cpfc = entrada.nextLong();
-                    System.out.println("Digite o nome do cliente: ");
-                    nomec = entrada.nextLine();
-                    entrada.nextLine();
-                    System.out.println("Digite o email do cliente: ");
-                    emailc = entrada.nextLine();
+                    System.out.println("Todos os clientes cadastrados: ");
 
-                    Cliente cliente = new Cliente(idc, cpfc, nomec, emailc);
-                    clienteDAO.insertCliente(cliente);
                     break;
                 case 2:
-                    System.out.println("Digite o id do cliente a ser deletado: ");
-                    idc = entrada.nextInt();
-                    clienteDAO.deleteCliente(idc);
+                    while (flag_switch){
+                        System.out.println("Escolha uma operação:");
+                        Thread.sleep(1000);
+                        System.out.println("1. Cadastro");
+                        System.out.println("2. Listagem");
+                        System.out.println("3. Editar");
+                        System.out.println("4. Deletar Funcionário");
+                        System.out.println("5. Sair");
+                        op_switch = entrada.nextInt();
+                        entrada.nextLine();
+                        switch (op_switch){
+                            case 1: // Create
+                                System.out.println("Digite o cpf do funcionário: ");
+                                entrada.nextLine();
+                                cpff = entrada.nextLine();
+                                System.out.println("Digite o nome do funcionário: ");
+                                nomef = entrada.nextLine();
+                                System.out.println("Digite o email do funcionário: ");
+                                emailf = entrada.nextLine();
+
+                                Funcionario funcionario = new Funcionario(cpff, nomef, emailf);
+                                funcionarioDAO.insertFuncionario(funcionario);
+                                break;
+
+                            case 2: // Read
+                                funcionarioDAO.selectFuncionario();
+                                break;
+
+                            case 3: // Update
+                                String novoValor = "";
+                                System.out.println("Digite o CPF do funcionário:");
+                                String cpf_escolhido = entrada.nextLine();
+
+                                System.out.println("Qual campo modificar? ");
+                                System.out.println("1. Nome");
+                                System.out.println("2. Email");
+
+                                int op_switch_in = entrada.nextInt();
+                                entrada.nextLine();
+
+                                if(op_switch_in == 1){
+                                    System.out.println("Digite o novo nome");
+                                    novoValor = entrada.nextLine();
+                                } else if (op_switch_in == 2) {
+                                    System.out.println("Digite o novo email");
+                                    novoValor = entrada.nextLine();
+                                }
+
+
+                                funcionarioDAO.editFuncionario(cpf_escolhido, op_switch_in, novoValor);
+
+                                break;
+
+                            case 4: // Delete
+                                String cpf_fun = "";
+                                System.out.println("Digite o cpf");
+                                cpf_fun = entrada.nextLine();
+
+                                funcionarioDAO.deleteFuncionario(cpf_fun);
+                                break;
+
+                            case 5:
+                                flag_switch = false;
+                                break;
+                        }
+
+                    }
                     break;
+
                 case 3:
-                    clienteDAO.selectCliente();
+                    System.out.println("================================================");
+                    System.out.println("Digite a operação a ser realizada: ");
+                    System.out.println("1 - Inserir informações de uma vaga.");
+                    System.out.println("2 - Modificar informações de uma vaga.");
+                    System.out.println("3 - Listar vagas");
+                    System.out.println("================================================\n");
+                    op_switch = entrada.nextInt();
+
+                    switch(op_switch){
+                        case 1:
+                            String funcionario_vaga = "";
+                            System.out.println("Digite o número da vaga: ");
+                            num = entrada.nextInt();
+                            disponivel = true;
+                            System.out.println("Digite o cpf dos funcionários responsável pela vaga: ");
+                            funcionario_vaga = entrada.nextLine();
+                            Vagas vaga = new Vagas(num, disponivel);
+                            vagaFuncionario vaga_funcionario = new vagaFuncionario(funcionario_vaga, num);
+                            vagasDAO.insertVaga(vaga);
+                            vagaFuncionarioDAO.insertVagaFuncionario(num,funcionario_vaga);
+                            break;
+                        case 2:
+                            System.out.println("Digite o número da vaga a ser modificada: ");
+                            break;
+                        case 3:
+                            vagasDAO.selectVaga();
+                            break;
+                    }
                     break;
                 case 4:
-                    System.out.println("Digite o id do funcionário: ");
-                    idf = entrada.nextInt();
-                    System.out.println("Digite o cpf do funcionário: ");
-                    cpff = entrada.nextLong();
-                    System.out.println("Digite o nome do funcionário: ");
-                    nomef = entrada.nextLine();
-                    entrada.nextLine();
-                    System.out.println("Digite o email do funcionário: ");
-                    emailf = entrada.nextLine();
 
-                    Funcionario funcionario = new Funcionario(idf, cpff, nomef, emailf);
-                    funcionarioDAO.insertFuncionario(funcionario);
                     break;
                 case 5:
-                    System.out.println("Digite o id do funcionário a ser deletado: ");
-                    idf = entrada.nextInt();
-                    funcionarioDAO.deleteFuncionario(idf);
                     break;
                 case 6:
                     funcionarioDAO.selectFuncionario();
@@ -160,4 +229,6 @@ public class Main {
             }
         }
     }
+
+
 }
