@@ -1,6 +1,7 @@
 package Model;
 
 public class Vagas {
+    private int id_v;
     private int num;
     private boolean disponivel;
     private int id_ve;

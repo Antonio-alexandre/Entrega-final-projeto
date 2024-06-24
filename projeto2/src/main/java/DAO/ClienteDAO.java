@@ -13,13 +13,12 @@ public class ClienteDAO extends ConnectionDAO{
 
         connectToDB();
 
-        String sql = "INSERT INTO Clientes (idc, cpf, nome, email) values(?,?,?,?)";
+        String sql = "INSERT INTO Clientes (cpf, nome, email) values(?,?,?)";
         try {
             pst = con.prepareStatement(sql);
-            pst.setInt(1, cliente.getIdc());
-            pst.setLong(2, cliente.getCpf());
-            pst.setString(3, cliente.getNome());
-            pst.setString(4, cliente.getEmail());
+            pst.setString(1, cliente.getCpf());
+            pst.setString(2, cliente.getNome());
+            pst.setString(3, cliente.getEmail());
             pst.execute();
             sucesso = true;
         } catch (SQLException exc) {
@@ -71,9 +70,8 @@ public class ClienteDAO extends ConnectionDAO{
 
             while (rs.next()) {
 
-                Cliente clienteAux = new Cliente(rs.getInt("idc"), rs.getLong("cpf"), rs.getString("nome"), rs.getString("email"));
+                Cliente clienteAux = new Cliente(rs.getString("cpf"), rs.getString("nome"), rs.getString("email"));
 
-                System.out.println("idcliente = " + clienteAux.getIdc());
                 System.out.println("cpf = " +clienteAux.getCpf());
                 System.out.println("nome = " + clienteAux.getNome());
                 System.out.println("email = " + clienteAux.getEmail());
@@ -94,5 +92,30 @@ public class ClienteDAO extends ConnectionDAO{
             }
         }
         return clientes;
+    }
+
+    public boolean editCliente(int id_ve, String cpf) {
+        connectToDB();
+
+        String sql = "UPDATE Cliente SET id_ve = ? WHERE cpf = ?";
+
+        try {
+            pst = con.prepareStatement(sql);
+            pst.setString(2, cpf);
+            pst.setString(1, id_ve);
+            pst.executeUpdate();
+            sucesso = true;
+        } catch (SQLException exc) {
+            System.out.println("Erro: " + exc.getMessage());
+            sucesso = false;
+        } finally {
+            try {
+                con.close();
+                pst.close();
+            } catch (SQLException exc) {
+                System.out.println("Erro: " + exc.getMessage());
+            }
+        }
+        return sucesso;
     }
 }

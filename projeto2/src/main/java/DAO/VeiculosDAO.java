@@ -14,13 +14,12 @@ public class VeiculosDAO extends ConnectionDAO {
 
         connectToDB();
 
-        String sql = "INSERT INTO Veiculos (idve, placa, cor, modelo) values(?,?,?,?)";
+        String sql = "INSERT INTO Veiculos (placa, cor, modelo) values(?,?,?)";
         try {
             pst = con.prepareStatement(sql);
-            pst.setInt(1, veiculo.getIdve());
-            pst.setString(2, veiculo.getPlaca());
-            pst.setString(3, veiculo.getCor());
-            pst.setString(4, veiculo.getModelo());
+            pst.setString(1, veiculo.getPlaca());
+            pst.setString(2, veiculo.getCor());
+            pst.setString(3, veiculo.getModelo());
             pst.execute();
             sucesso = true;
         } catch (SQLException exc) {
@@ -37,12 +36,12 @@ public class VeiculosDAO extends ConnectionDAO {
         return sucesso;
     }
 
-    public boolean deleteVeiculo(int idve) {
+    public boolean deleteVeiculo(String placa) {
         connectToDB();
-        String sql = "DELETE FROM Veiculos where idve=?";
+        String sql = "DELETE FROM Veiculos where placa=?";
         try {
             pst = con.prepareStatement(sql);
-            pst.setInt(1, idve);
+            pst.setString(1, placa);
             pst.execute();
             sucesso = true;
         } catch (SQLException ex) {
@@ -72,9 +71,8 @@ public class VeiculosDAO extends ConnectionDAO {
 
             while (rs.next()) {
 
-                Veiculos veiculoAux = new Veiculos(rs.getInt("idve"), rs.getString("placa"), rs.getString("cor"), rs.getString("modelo"));
+                Veiculos veiculoAux = new Veiculos(rs.getString("placa"), rs.getString("cor"), rs.getString("modelo"));
 
-                System.out.println("idveiculos = " + veiculoAux.getIdve());
                 System.out.println("placa = " + veiculoAux.getPlaca());
                 System.out.println("cor = " + veiculoAux.getCor());
                 System.out.println("modelo = " + veiculoAux.getModelo());

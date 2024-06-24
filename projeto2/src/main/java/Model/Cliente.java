@@ -2,23 +2,14 @@ package Model;
 
 public class Cliente {
     private int idc;
-    private long cpf;
+    private String cpf;
     private String nome;
     private String email;
 
-    public Cliente(int idc, long cpf, String nome, String email) {
+    public Cliente(String cpf, String nome, String email) {
         this.cpf = cpf;
         this.nome = nome;
         this.email = email;
-        this.idc = idc;
-    }
-
-    public void setIdc(int idc) {
-        this.idc = idc;
-    }
-
-    public int getIdc() {
-        return idc;
     }
 
     public String getNome() {
@@ -37,11 +28,11 @@ public class Cliente {
         this.email = email;
     }
 
-    public long getCpf() {
+    public String getCpf() {
         return cpf;
     }
 
-    public void setCpf(long cpf) {
+    public void setCpf(String cpf) {
         this.cpf = cpf;
     }
 }

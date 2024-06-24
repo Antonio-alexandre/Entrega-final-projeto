@@ -11,7 +11,7 @@ public class VagaFuncionarioDAO extends ConnectionDAO {
     // Método para inserir uma associação entre vaga e funcionário
     public boolean insertVagaFuncionario(int num_vaga, String cpf_funcionario) {
         connectToDB();
-        String sql = "INSERT INTO VagaFuncionario (id_vaga, id_funcionario) VALUES (?, ?)";
+        String sql = "INSERT INTO Vagas_has_Funcionario (vagas_id_v, funcionario_id_f) VALUES (?, ?)";
 
         try {
             // Obter o id_vaga correspondente ao num_vaga
@@ -42,7 +42,7 @@ public class VagaFuncionarioDAO extends ConnectionDAO {
     // Método para deletar uma associação entre vaga e funcionário
     public boolean deleteVagaFuncionario(int num_vaga, String cpf_funcionario) {
         connectToDB();
-        String sql = "DELETE FROM VagaFuncionario WHERE id_vaga = ? AND id_funcionario = ?";
+        String sql = "DELETE FROM Vagas_has_funcionario WHERE id_vaga = ? AND id_funcionario = ?";
 
         try {
             // Obter o id_vaga correspondente ao num_vaga
@@ -73,7 +73,7 @@ public class VagaFuncionarioDAO extends ConnectionDAO {
     // Método auxiliar para obter o id_vaga a partir do num_vaga
     private int getIdVagaPorNumero(int num_vaga) throws SQLException {
         connectToDB();
-        String sql = "SELECT id_vaga FROM Vaga WHERE num_vaga = ?";
+        String sql = "SELECT id_v FROM Vagas WHERE num = ?";
         int id_vaga = -1;
 
         try (PreparedStatement pst = con.prepareStatement(sql)) {
@@ -81,7 +81,7 @@ public class VagaFuncionarioDAO extends ConnectionDAO {
             ResultSet rs = pst.executeQuery();
 
             if (rs.next()) {
-                id_vaga = rs.getInt("id_vaga");
+                id_vaga = rs.getInt("id_v");
             }
         }
 
@@ -91,7 +91,7 @@ public class VagaFuncionarioDAO extends ConnectionDAO {
     // Método auxiliar para obter o id_funcionario a partir do cpf_funcionario
     private int getIdFuncionarioPorCPF(String cpf_funcionario) throws SQLException {
         connectToDB();
-        String sql = "SELECT id_funcionario FROM Funcionario WHERE cpf = ?";
+        String sql = "SELECT id_f FROM Funcionario WHERE cpf = ?";
         int id_funcionario = -1;
 
         try (PreparedStatement pst = con.prepareStatement(sql)) {
@@ -99,7 +99,7 @@ public class VagaFuncionarioDAO extends ConnectionDAO {
             ResultSet rs = pst.executeQuery();
 
             if (rs.next()) {
-                id_funcionario = rs.getInt("id_funcionario");
+                id_funcionario = rs.getInt("id_f");
             }
         }
 

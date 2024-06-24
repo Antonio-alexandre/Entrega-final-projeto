@@ -9,6 +9,7 @@ public class VagasDAO extends ConnectionDAO{
     Scanner entrada = new Scanner(System.in);
     //DAO - Data Access Object
     boolean sucesso = false; //Para saber se funcionou
+    VeiculosDAO veiculosDAO;
 
     //INSERT
     public boolean insertVaga(Vagas vaga) {
@@ -39,6 +40,7 @@ public class VagasDAO extends ConnectionDAO{
     public boolean updateVaga(boolean disponivel, int id_ve, int num) {
         connectToDB();
         String sql = "UPDATE Vagas SET disponivel = ? , id_ve = ? WHERE num = ?";
+        String sql1 = "SELECT * FROM Veiculos WHERE placa =?";
         try {
             pst = con.prepareStatement(sql);
             System.out.println("Digite o número da vaga: ");
@@ -50,8 +52,9 @@ public class VagasDAO extends ConnectionDAO{
                 pst.setBoolean(1, disponivel);
             else{
                 pst.setBoolean(1, disponivel);
-                System.out.println("Digite a placa do veículo a ser alocado para a vaga: ");
-                con.prepareStatement("SELECT * FROM Veiculos WHERE placa =?");
+                System.out.println("Veículos cadastrados no sistema: ");
+                veiculosDAO.selectVeiculo();
+                System.out.println("Digite o id do veículo a ser alocado para a vaga: ");
                 pst.setInt(2, id_ve);
             }
             pst.execute();
