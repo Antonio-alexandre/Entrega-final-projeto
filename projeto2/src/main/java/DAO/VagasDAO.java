@@ -37,26 +37,13 @@ public class VagasDAO extends ConnectionDAO{
         return sucesso;
     }
 
-    public boolean updateVaga(boolean disponivel, int id_ve, int num) {
+    public boolean updateVaga(int num, String placa_veiculo) {
         connectToDB();
-        String sql = "UPDATE Vagas SET disponivel = ? , id_ve = ? WHERE num = ?";
-        String sql1 = "SELECT * FROM Veiculos WHERE placa =?";
+        String sql = "UPDATE Vagas SET disponivel = false, placa_veiculo = ? WHERE num = ? and disponivel = true";
         try {
             pst = con.prepareStatement(sql);
-            System.out.println("Digite o número da vaga: ");
-            pst.setInt(3, num);
-            System.out.println();
-            System.out.println("Digite a disponibilidade da vaga: ");
-            disponivel = entrada.nextBoolean();
-            if(disponivel)
-                pst.setBoolean(1, disponivel);
-            else{
-                pst.setBoolean(1, disponivel);
-                System.out.println("Veículos cadastrados no sistema: ");
-                veiculosDAO.selectVeiculo();
-                System.out.println("Digite o id do veículo a ser alocado para a vaga: ");
-                pst.setInt(2, id_ve);
-            }
+            pst.setInt(2, num);
+            pst.setString(1, placa_veiculo);
             pst.execute();
             sucesso = true;
         } catch (SQLException ex) {
@@ -89,6 +76,8 @@ public class VagasDAO extends ConnectionDAO{
                 Vagas vagasAux = new Vagas(rs.getInt("num"), rs.getBoolean("disponivel"));
                 System.out.println("Número da vaga: " + vagasAux.getNum());
                 System.out.println("Disponibilidade da vaga: = " + vagasAux.getDisponivel());
+                System.out.println("Placa do veículo alocado: " + rs.getString("placa_veiculo"));
+                System.out.println("");
                 System.out.println("--------------------------------");
 
                 if(vagasAux.getDisponivel())

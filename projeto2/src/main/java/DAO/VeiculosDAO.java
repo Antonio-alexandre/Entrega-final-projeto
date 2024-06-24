@@ -61,7 +61,7 @@ public class VeiculosDAO extends ConnectionDAO {
     public ArrayList<Veiculos> selectVeiculo() {
         ArrayList<Veiculos> veiculos = new ArrayList<>();
         connectToDB();
-        String sql = "SELECT * FROM Veiculo";
+        String sql = "SELECT * FROM Veiculos";
 
         try {
             st = con.createStatement();

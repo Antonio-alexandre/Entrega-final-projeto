@@ -35,12 +35,12 @@ public class ClienteDAO extends ConnectionDAO{
         return sucesso;
     }
 
-    public boolean deleteCliente(int idc) {
+    public boolean deleteCliente(String cpf) {
         connectToDB();
-        String sql = "DELETE FROM Cliente where idc=?";
+        String sql = "DELETE FROM Cliente where cpf=?";
         try {
             pst = con.prepareStatement(sql);
-            pst.setInt(1, idc);
+            pst.setString(1, cpf);
             pst.execute();
             sucesso = true;
         } catch (SQLException ex) {
@@ -94,15 +94,15 @@ public class ClienteDAO extends ConnectionDAO{
         return clientes;
     }
 
-    public boolean editCliente(int id_ve, String cpf) {
+    public boolean editCliente(String cpf, String placa) {
         connectToDB();
 
-        String sql = "UPDATE Cliente SET id_ve = ? WHERE cpf = ?";
+        String sql = "UPDATE Cliente SET placa_veiculo = ? WHERE cpf = ?";
 
         try {
             pst = con.prepareStatement(sql);
-            pst.setString(2, cpf);
-            pst.setString(1, id_ve);
+            pst.setString(1, cpf);
+            pst.setString(2, placa);
             pst.executeUpdate();
             sucesso = true;
         } catch (SQLException exc) {

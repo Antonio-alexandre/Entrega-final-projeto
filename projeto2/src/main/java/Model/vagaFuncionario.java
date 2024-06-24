@@ -1,20 +1,20 @@
 package Model;
 
 public class vagaFuncionario {
-    private String cpf_funcionario;
+    private String cpf;
     private int placa_veiculo;
 
     public vagaFuncionario(String cpf_funcionario, int placa_veiculo){
-        this.cpf_funcionario = cpf_funcionario;
+        this.cpf = cpf_funcionario;
         this.placa_veiculo = placa_veiculo;
     }
 
-    public void setFuncionario(String cpf_funcionario) {
-        this.cpf_funcionario = cpf_funcionario;
+    public void setFuncionario(String cpf) {
+        this.cpf = cpf;
     }
 
     public String getFuncionario() {
-        return cpf_funcionario;
+        return cpf;
     }
 
     public void setVaga(int placa_veiculo) {

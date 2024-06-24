@@ -1,10 +1,9 @@
 package Model;
 
 public class Vagas {
-    private int id_v;
     private int num;
     private boolean disponivel;
-    private int id_ve;
+    private int placa_veiculo;
 
     public Vagas(int num, boolean disponivel){
         this.num = num;
@@ -27,11 +26,11 @@ public class Vagas {
         return disponivel;
     }
 
-    public void setId_ve(int id_ve){
-        this.id_ve = id_ve;
+    public void setPlaca_veiculo(int placa_veiculo){
+        this.placa_veiculo = placa_veiculo;
     }
 
-    public int getId_ve() {
-        return id_ve;
+    public int getPlaca_veiculo() {
+        return placa_veiculo;
     }
 }

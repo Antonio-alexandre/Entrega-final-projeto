@@ -10,11 +10,6 @@ public class Veiculos {
         this.placa = placa;
         this.cor = cor;
         this.modelo = modelo;
-        this.idve = idve;
-    }
-
-    public int getIdve() {
-        return idve;
     }
 
     public String getPlaca() {

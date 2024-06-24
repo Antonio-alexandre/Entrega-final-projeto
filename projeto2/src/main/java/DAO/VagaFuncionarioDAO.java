@@ -1,5 +1,7 @@
 package DAO;
 
+import Model.vagaFuncionario;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -9,20 +11,14 @@ public class VagaFuncionarioDAO extends ConnectionDAO {
     private boolean sucesso = false;
 
     // Método para inserir uma associação entre vaga e funcionário
-    public boolean insertVagaFuncionario(int num_vaga, String cpf_funcionario) {
+    public boolean insertVagaFuncionario(vagaFuncionario vaga_has_funcionario) {
         connectToDB();
-        String sql = "INSERT INTO Vagas_has_Funcionario (vagas_id_v, funcionario_id_f) VALUES (?, ?)";
+        String sql = "INSERT INTO Vagas_has_Funcionario (num_vaga, cpf_funcionario) VALUES (?, ?)";
 
         try {
-            // Obter o id_vaga correspondente ao num_vaga
-            int id_vaga = getIdVagaPorNumero(num_vaga);
-
-            // Obter o id_funcionario correspondente ao cpf_funcionario
-            int id_funcionario = getIdFuncionarioPorCPF(cpf_funcionario);
-
-            PreparedStatement pst = con.prepareStatement(sql);
-            pst.setInt(1, id_vaga);
-            pst.setInt(2, id_funcionario);
+            pst = con.prepareStatement(sql);
+            pst.setInt(1, vaga_has_funcionario.getVaga());
+            pst.setString(2, vaga_has_funcionario.getFuncionario());
             pst.executeUpdate(); // Use executeUpdate para INSERT, UPDATE e DELETE
             sucesso = true;
         } catch (SQLException exc) {
@@ -30,8 +26,12 @@ public class VagaFuncionarioDAO extends ConnectionDAO {
             sucesso = false;
         } finally {
             try {
-                con.close();
-                pst.close();
+                if (pst != null) {
+                    pst.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
             } catch (SQLException exc) {
                 System.out.println("Erro: " + exc.getMessage());
             }
@@ -40,20 +40,14 @@ public class VagaFuncionarioDAO extends ConnectionDAO {
     }
 
     // Método para deletar uma associação entre vaga e funcionário
-    public boolean deleteVagaFuncionario(int num_vaga, String cpf_funcionario) {
+    public boolean deleteVagaFuncionario(vagaFuncionario vaga_has_funcionario) {
         connectToDB();
         String sql = "DELETE FROM Vagas_has_funcionario WHERE id_vaga = ? AND id_funcionario = ?";
 
         try {
-            // Obter o id_vaga correspondente ao num_vaga
-            int id_vaga = getIdVagaPorNumero(num_vaga);
-
-            // Obter o id_funcionario correspondente ao cpf_funcionario
-            int id_funcionario = getIdFuncionarioPorCPF(cpf_funcionario);
-
             PreparedStatement pst = con.prepareStatement(sql);
-            pst.setInt(1, id_vaga);
-            pst.setInt(2, id_funcionario);
+            pst.setString(1, vaga_has_funcionario.getFuncionario());
+            pst.setInt(2, vaga_has_funcionario.getVaga());
             pst.executeUpdate(); // Use executeUpdate para INSERT, UPDATE e DELETE
             sucesso = true;
         } catch (SQLException exc) {
@@ -70,39 +64,5 @@ public class VagaFuncionarioDAO extends ConnectionDAO {
         return sucesso;
     }
 
-    // Método auxiliar para obter o id_vaga a partir do num_vaga
-    private int getIdVagaPorNumero(int num_vaga) throws SQLException {
-        connectToDB();
-        String sql = "SELECT id_v FROM Vagas WHERE num = ?";
-        int id_vaga = -1;
 
-        try (PreparedStatement pst = con.prepareStatement(sql)) {
-            pst.setInt(1, num_vaga);
-            ResultSet rs = pst.executeQuery();
-
-            if (rs.next()) {
-                id_vaga = rs.getInt("id_v");
-            }
-        }
-
-        return id_vaga;
-    }
-
-    // Método auxiliar para obter o id_funcionario a partir do cpf_funcionario
-    private int getIdFuncionarioPorCPF(String cpf_funcionario) throws SQLException {
-        connectToDB();
-        String sql = "SELECT id_f FROM Funcionario WHERE cpf = ?";
-        int id_funcionario = -1;
-
-        try (PreparedStatement pst = con.prepareStatement(sql)) {
-            pst.setString(1, cpf_funcionario);
-            ResultSet rs = pst.executeQuery();
-
-            if (rs.next()) {
-                id_funcionario = rs.getInt("id_f");
-            }
-        }
-
-        return id_funcionario;
-    }
 }
